@@ -12,6 +12,7 @@ class AuthService {
   loggedIn() {
     // Checks if there is a saved token and it's still valid
     const token = this.getToken();
+ // !!token: This condition checks if the token variable has a truthy value. The !! operator is used to convert any truthy or falsy value to a boolean value, so !!token will evaluate to true if token has a truthy value (i.e., any non-null, non-undefined, non-zero, non-empty string value or non-empty object/array), and false otherwise.  
     return !!token && !this.isTokenExpired(token); // handwaiving here
   }
 
