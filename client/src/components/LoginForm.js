@@ -2,9 +2,9 @@
 import React, { useState } from 'react';
 import { Form, Button, Alert } from 'react-bootstrap';
 
-//EC:  Import the `useMutation()` hook from Apollo Client
+//EC: Import the `useMutation()` hook from Apollo Client
 import { useMutation } from '@apollo/client';
-//EC: //EC: Import the GraphQL mutation
+//EC: Import the GraphQL mutation
 import { LOGIN_USER } from '../utils/mutations';
 
 //import { loginUser } from '../utils/API';
@@ -44,6 +44,7 @@ const LoginForm = () => {
        Auth.login(data.login.token);
      } catch (e) {
        console.error(e);
+       setShowAlert(true);
      }
 
     // try {
