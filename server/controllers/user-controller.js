@@ -7,6 +7,8 @@ module.exports = {
   // get a single user by either their id or their username
   async getSingleUser({ user = null, params }, res) {
     const foundUser = await User.findOne({
+  // '$or' is a MongoDB query operator used in the findOne() method to perform a logical OR operation between two or more conditions.
+  //  allows the search to be performed based on two different fields in the database, providing flexibility in how the user can be looked up.     
       $or: [{ _id: user ? user._id : params.id }, { username: params.username }],
     });
 
