@@ -102,7 +102,8 @@ Mutation: {
   //     return res.status(400).json(err);
   //   }
   // },
-    
+
+    //EC: here inside {} I distructure that args (I could use just args and later args.author, args.description... )
     saveBook: async (parent, { author, description, title, bookId, image, link }, context) => {
       if (context.user) {
         return User.findOneAndUpdate(
