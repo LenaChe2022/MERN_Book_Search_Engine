@@ -34,8 +34,11 @@ module.exports = {
 
   //EC: Updated the authMiddleware function to work with the GrathQL API
   authMiddleware: function ({ req }) {
+    //EC: here check whic is exist - we will use it
     let token = req.body.token || req.query.token || req.headers.authorization;
 
+    //EC: if the token comes from header - there something in front of the token (like "barer") 
+    // So We split the token string into an array and return actual token (the end part of the string)
     if (req.headers.authorization) {
       token = token.split(' ').pop().trim();
     }
@@ -44,6 +47,7 @@ module.exports = {
       return req;
     }
 
+    // if token can be verified, add the decoded user's data to the request so it can be accessed in the resolver
     try {
       const { data } = jwt.verify(token, secret, { maxAge: expiration });
       req.user = data;
@@ -51,6 +55,7 @@ module.exports = {
       console.log('Invalid token');
     }
 
+    // return the request object so it can be passed to the resolver as `context`
     return req;
   },
 

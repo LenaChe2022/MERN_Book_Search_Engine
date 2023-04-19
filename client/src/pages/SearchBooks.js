@@ -10,16 +10,19 @@ import {
 
 import Auth from '../utils/auth';
 //EC: will not use saveBook
-import { saveBook, searchGoogleBooks } from '../utils/API';
+import { searchGoogleBooks } from '../utils/API';
+//import { saveBook, searchGoogleBooks } from '../utils/API';
 import { saveBookIds, getSavedBookIds } from '../utils/localStorage';
 
 //EC: Import the `useMutation()` hook from Apollo Client
 import { useMutation } from '@apollo/client';
+import { useQuery } from '@apollo/client';
 
 //EC: Import the GraphQL mutation
-import { SAVE_BOOK } from '../../utils/mutations';
-import { GET_ME } from '../../utils/queries';
+import { SAVE_BOOK } from '../utils/mutations';
+import { GET_ME } from '../utils/queries';
 
+import { useParams } from 'react-router-dom';
 
 const SearchBooks = () => {
   // create state for holding returned google api data
@@ -30,22 +33,33 @@ const SearchBooks = () => {
   // create state to hold saved bookId values
   const [savedBookIds, setSavedBookIds] = useState(getSavedBookIds());
 
+  //EC: this show "undefined"
+  // const { userId } = useParams();
+  // const { loading, myId } = useQuery(GET_ME, {
+  //   variables: { userId: userId },
+  // });
+
+  // const user = myId;
+  // console.log(user);
+
   //EC: Invoke `useMutation()` hook to return a Promise-based function and data about the SAVE_BOOK mutation
   //EC: this function 'saveBookGql' is just a wrapper for useMutation
-  const [saveBookGql, { error }] = useMutation(SAVE_BOOK, {
-    update(cache, { data: { saveBookGql } }) {
-      try {
-    // update me object's cache    
-        const { me } = cache.readQuery({ query: GET_ME });
-        cache.writeQuery({
-          query: GET_ME,
-          data: { me: { ...me, savedBooks: [...me.savedBooks, saveBookGql] } },
-        });
-      } catch (e) {
-        console.error(e);
-      }
-    },
-  });
+  const [saveBookGql, { error }] = useMutation(SAVE_BOOK);
+
+//     update(cache, { data: { savedBooks } }) {
+//       try {
+//     // update me object's cache    
+//         const { me } = cache.readQuery({ query: GET_ME });
+//         cache.writeQuery({
+//           query: GET_ME,
+//           data: { me: { ...me, savedBooks: [...me.savedBooks, saveBookGql] } },
+//         });
+//        // console.log(me);
+//       } catch (error) {
+//         console.error(error);
+//       }
+//     },
+//  });
 
   // set up useEffect hook to save `savedBookIds` list to localStorage on component unmount
   // learn more here: https://reactjs.org/docs/hooks-effect.html#effects-with-cleanup
@@ -92,7 +106,8 @@ const SearchBooks = () => {
 
     // get token
     const token = Auth.loggedIn() ? Auth.getToken() : null;
-
+    //To test!
+    console.log (token);
     if (!token) {
       return false;
     }
@@ -110,12 +125,13 @@ const SearchBooks = () => {
           // link
         }
       });
-
+     console.log(data);
       setSavedBookIds([...savedBookIds, bookToSave.bookId]);
     } catch (err) {
+      console.log("handleSaveBook:");
       console.error(err);
     }
-
+  };
 
 //EC: previous code:
     // try {
@@ -130,7 +146,7 @@ const SearchBooks = () => {
     // } catch (err) {
     //   console.error(err);
     // }
-  };
+  //};
 
   return (
     <>

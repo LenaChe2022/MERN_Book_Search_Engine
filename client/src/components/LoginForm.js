@@ -40,7 +40,7 @@ const LoginForm = () => {
         const { data } = await login({
           variables: { ...userFormData },
        });
-
+ //EC: after login, we expect to get back token as a response (data.login.token) 
        Auth.login(data.login.token);
      } catch (e) {
        console.error(e);

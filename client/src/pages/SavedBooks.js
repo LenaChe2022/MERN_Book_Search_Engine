@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
+//import React, { useState, useEffect } from 'react';
 import {
   Container,
   Card,
@@ -9,8 +10,8 @@ import {
 //EC:
 import { useMutation } from '@apollo/client';
 import { useQuery } from '@apollo/client';
-import { REMOVE_BOOK } from '../../utils/mutations';
-import { GET_ME } from '../../utils/queries';
+import { REMOVE_BOOK } from '../utils/mutations';
+import { GET_ME } from '../utils/queries';
 
 
 //import { getMe, deleteBook } from '../utils/API';
@@ -29,7 +30,7 @@ const SavedBooks = () => {
   const { loading, data } = useQuery(GET_ME);
    //EC: if my "data" is avaliable, so I use it, otherwise it's gona be just empty array. 
   setUserData(data.me);
-
+   console.log(userData);
   //EC: Here I use "loading " to check: if this "loading" is true (i do not have data yet), so I display this message <div>Loading...</div>
   //otherwise ( : ) if my data is liaded I can go ahead and pass that to my ProfileList as a property {profiles}
 
@@ -61,20 +62,24 @@ const SavedBooks = () => {
     // }, [userDataLength]);
 
    //EC: add REMOVE_BOOK functionality
-   const [removeBook, { error }] = useMutation(REMOVE_BOOK, {
-    update(cache, { data: { saveBookGql } }) {
-    try {
-     // update me object's cache    
-      const { me } = cache.readQuery({ query: GET_ME });
-      cache.writeQuery({
-        query: GET_ME,
-        data: { me: { ...me, savedBooks: [...me.savedBooks, saveBookGql] } },
-      });
-     } catch (e) {
-      console.error(e);
-     }
-    },
-    });
+   const [removeBook, { error }] = useMutation(REMOVE_BOOK);
+//EC: With cache:
+    // const [removeBook, { error }] = useMutation(REMOVE_BOOK, {
+    //   update(cache, { data: { saveBookGql } }) {
+    //   try {
+    //    // update me object's cache    
+    //     const { me } = cache.readQuery({ query: GET_ME });
+    //     cache.writeQuery({
+    //       query: GET_ME,
+    //       data: { me: { ...me, savedBooks: [...me.savedBooks, saveBookGql] } },
+    //     });
+    //    } catch (error) {
+    //     console.error(error);
+    //    }
+    //   },
+    //   });
+
+
 
 
     // create function that accepts the book's mongo _id value as param and deletes the book from the database
@@ -93,8 +98,8 @@ const SavedBooks = () => {
       });
 
       removeBookId(bookId);;
-      } catch (err) {
-      console.error(err);
+      } catch (error) {
+      console.error(error);
       }
     };
   
