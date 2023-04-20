@@ -9,6 +9,14 @@ const resolvers = {
 
 //Hint: User the functionality in the user-controller.js as a guide
 Query: {
+    
+  users: async () => {
+    return User.find();
+  },
+
+  user: async (parent, { userId }) => {
+    return User.findOne({ _id: userId });
+  },
 
   // get a single user by either their id or their username
   // async getSingleUser({ user = null, params }, res) {
@@ -25,7 +33,8 @@ Query: {
   //   res.json(foundUser);
   // },
 
-    me: async (parent, context) => {
+  // By adding context to our query, we can retrieve the logged in user without specifically searching for them
+    me: async (parent, args, context) => {
         if (context.user) {
           return User.findOne({ _id: context.user._id });
         }
@@ -51,6 +60,7 @@ Mutation: {
   //   res.json({ token, user });
   // },
 
+    //EC: -OK  
     login: async (parent, { email, password }) => {
       const user = await User.findOne({ email });
 
@@ -80,6 +90,7 @@ Mutation: {
 //   res.json({ token, user });
 // },
 
+    //EC: -OK  
     addUser:  async (parent, { username, email, password }) => {
       const user = await User.create({ username, email, password });
       const token = signToken(user);
@@ -102,8 +113,10 @@ Mutation: {
   //     return res.status(400).json(err);
   //   }
   // },
-    
+
+    //EC: here inside {} I distructure that args (I could use just args and later args.author, args.description... )
     saveBook: async (parent, { author, description, title, bookId, image, link }, context) => {
+      console.log(context.user);
       if (context.user) {
         return User.findOneAndUpdate(
           { _id: context.user._id },

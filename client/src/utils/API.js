@@ -29,6 +29,7 @@ export const loginUser = (userData) => {
 };
 
 // save book data for a logged in user
+//EC: will not use this function. Will use SAVE_BOOK mutation in SearchBooks.js instead
 export const saveBook = (bookData, token) => {
   return fetch('/api/users', {
     method: 'PUT',

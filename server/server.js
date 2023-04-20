@@ -9,14 +9,18 @@ const { ApolloServer } = require('apollo-server-express');
 // Import the two parts of a GraphQL schema
 const { typeDefs, resolvers } = require('./schemas');
 
+//EC: Import authMiddleware
+const { authMiddleware } = require('./utils/auth');
+
 
 const app = express();
 const PORT = process.env.PORT || 3001;
 
-//EC: add Apolloserver
+//EC: add Apolloserver and the context
 const server = new ApolloServer({
   typeDefs,
-  resolvers
+  resolvers,
+  context: authMiddleware,
 });
 
 //TODO: find out - maybe change to 'false'?
