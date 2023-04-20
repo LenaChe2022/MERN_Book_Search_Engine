@@ -18,19 +18,30 @@ import { GET_ME } from '../utils/queries';
 import Auth from '../utils/auth';
 import { removeBookId } from '../utils/localStorage';
 
+
+
 const SavedBooks = () => {
+  
   const [userData, setUserData] = useState({});
 
-  // use this to determine if `useEffect()` hook needs to run again
-  const userDataLength = Object.keys(userData).length;
-
-
-  //EC: here "loading" - what let us know if the data is avaliable or not
+   //EC: here "loading" - what let us know if the data is avaliable or not
   // and "data" - that contain the results of making that query
   const { loading, data } = useQuery(GET_ME);
+
+   //const { loading, data } = useQuery(GET_ME);
+     //EC: if my "data" is avaliable, so I use it, otherwise it's gona be just empty array. 
+  setUserData(data);
+  console.log(data);
+
+  // use this to determine if `useEffect()` hook needs to run again
+  //const userDataLength = Object.keys(userData).length;
+
+
+
+ // const { loading, data } = useQuery(GET_ME);
    //EC: if my "data" is avaliable, so I use it, otherwise it's gona be just empty array. 
-  setUserData(data.me);
-   console.log(userData);
+ // setUserData(data);
+ //  console.log(userData);
   //EC: Here I use "loading " to check: if this "loading" is true (i do not have data yet), so I display this message <div>Loading...</div>
   //otherwise ( : ) if my data is liaded I can go ahead and pass that to my ProfileList as a property {profiles}
 
@@ -58,11 +69,12 @@ const SavedBooks = () => {
    //   };
 
 
-   //   getUserData();
+   //getUserData();
     // }, [userDataLength]);
 
    //EC: add REMOVE_BOOK functionality
    const [removeBook, { error }] = useMutation(REMOVE_BOOK);
+
 //EC: With cache:
     // const [removeBook, { error }] = useMutation(REMOVE_BOOK, {
     //   update(cache, { data: { saveBookGql } }) {
@@ -91,13 +103,14 @@ const SavedBooks = () => {
        return false;
      }
 
-     //EC: add my code dor remove book  
+     //EC: add my code for remove book  
      try {
       const { data } = await removeBook({
         variables: {bookId},
       });
 
-      removeBookId(bookId);;
+      removeBookId(bookId);
+      setUserData(data);
       } catch (error) {
       console.error(error);
       }
@@ -122,7 +135,7 @@ const SavedBooks = () => {
   //};
 
   // if data isn't here yet, say so
-  if (!userDataLength) {
+  if (loading) {
     return <h2>LOADING...</h2>;
   }
 

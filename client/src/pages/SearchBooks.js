@@ -88,10 +88,14 @@ const SearchBooks = () => {
         bookId: book.id,
         authors: book.volumeInfo.authors || ['No author to display'],
         title: book.volumeInfo.title,
-        description: book.volumeInfo.description,
+        description: book.volumeInfo.description || '',
         image: book.volumeInfo.imageLinks?.thumbnail || '',
       }));
+      
+      //To test:
+      console.log(bookData);
 
+      //EC: bookData - an array of books from googlesearch which shoun on the page
       setSearchedBooks(bookData);
       setSearchInput('');
     } catch (err) {
@@ -103,6 +107,9 @@ const SearchBooks = () => {
   const handleSaveBook = async (bookId) => {
     // find the book in `searchedBooks` state by the matching id
     const bookToSave = searchedBooks.find((book) => book.bookId === bookId);
+
+    //To test:
+    console.log(bookToSave);
 
     // get token
     const token = Auth.loggedIn() ? Auth.getToken() : null;
